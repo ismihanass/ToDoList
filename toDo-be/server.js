@@ -8,7 +8,15 @@ app.use(cors());
 
 let tasks = [];
 
-app.post("/tasks", (req, res) => {
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (token !== "token123") {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  next();
+};
+
+app.post("/tasks", verifyToken, (req, res) => {
   const task = req.body;
   tasks.push(task);
   console.log(tasks);
@@ -19,7 +27,7 @@ app.get("/tasks", (req, res) => {
   res.json(tasks);
 });
 
-app.put("/tasks/:id", (req, res) => {
+app.put("/tasks/:id", verifyToken, (req, res) => {
   const taskId = parseInt(req.params.id);
   const { isCompleted } = req.body;
   const task = tasks.find((t) => t.id === taskId);
@@ -28,9 +36,12 @@ app.put("/tasks/:id", (req, res) => {
     task.isCompleted = isCompleted;
     console.log(tasks);
     res.json({ message: "Task updated", task });
+  } else {
+    res.json({ message: "Task not found" });
   }
 });
-app.delete("/tasks/:id", (req, res) => {
+
+app.delete("/tasks/:id", verifyToken, (req, res) => {
   const taskId = parseInt(req.params.id);
   tasks = tasks.filter((t) => t.id !== taskId);
   console.log(tasks);
