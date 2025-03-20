@@ -1,5 +1,5 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = 3000;
 
@@ -10,24 +10,25 @@ let tasks = [];
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
-  if (token !== "token123") {
-    return res.status(401).json({ message: "Unauthorized" });
+  if (token !== 'token123') {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
   next();
 };
 
-app.post("/tasks", verifyToken, (req, res) => {
-  const task = req.body;
+app.post('/tasks', verifyToken, (req, res) => {
+  const { text } = req.body;
+  const task = { id: Date.now(), text, isCompleted: false };
   tasks.push(task);
   console.log(tasks);
-  res.json({ message: "Task created", task });
+  res.json({ message: 'Task created', task });
 });
 
-app.get("/tasks", (req, res) => {
+app.get('/tasks', verifyToken, (req, res) => {
   res.json(tasks);
 });
 
-app.put("/tasks/:id", verifyToken, (req, res) => {
+app.put('/tasks/:id', verifyToken, (req, res) => {
   const taskId = parseInt(req.params.id);
   const { isCompleted } = req.body;
   const task = tasks.find((t) => t.id === taskId);
@@ -35,17 +36,17 @@ app.put("/tasks/:id", verifyToken, (req, res) => {
   if (task) {
     task.isCompleted = isCompleted;
     console.log(tasks);
-    res.json({ message: "Task updated", task });
+    res.json({ message: 'Task updated', task });
   } else {
-    res.json({ message: "Task not found" });
+    res.json({ message: 'Task not found' });
   }
 });
 
-app.delete("/tasks/:id", verifyToken, (req, res) => {
+app.delete('/tasks/:id', verifyToken, (req, res) => {
   const taskId = parseInt(req.params.id);
   tasks = tasks.filter((t) => t.id !== taskId);
   console.log(tasks);
-  res.json({ message: "Task deleted" });
+  res.json({ message: 'Task deleted' });
 });
 
 app.listen(port, () => {

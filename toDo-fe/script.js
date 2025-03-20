@@ -5,25 +5,26 @@ const taskList = document.getElementById('taskList');
 addButton.addEventListener('click', async () => {
   const taskText = taskInput.value;
   if (taskText) {
-    const task = { text: taskText, isCompleted: false, id: Date.now() };
-
-    const response = await fetch('http://localhost:3000/tasks', {
+    await fetch('http://localhost:3000/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'token123',
       },
-      body: JSON.stringify(task),
+      body: JSON.stringify({ text: taskText }),
     });
 
-    const data = await response.json();
     taskInput.value = '';
     loadTasks();
   }
 });
 
 async function loadTasks() {
-  const response = await fetch('http://localhost:3000/tasks');
+  const response = await fetch('http://localhost:3000/tasks', {
+    headers: {
+      'Authorization': 'token123',
+    },
+  });
   const tasks = await response.json();
 
   taskList.innerHTML = '';
