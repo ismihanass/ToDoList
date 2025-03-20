@@ -1,0 +1,21 @@
+#taskInput {
+    height: 30px;
+    width: 150px;
+    background-color: pink;
+    border-radius: 20px;
+    border: 5px solid pink;
+}
+#addButton {
+    height: 30px;
+    width: 100px;
+    background-color: pink;
+    border-radius: 20px;
+    border: 1px solid pink;
+}
+#addButton:hover{
+    cursor: crosshair;
+    background-color: rgb(200, 114, 128);
+}
+#taskList{
+    list-style:armenian;
+}
