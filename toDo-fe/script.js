@@ -33,18 +33,25 @@ async function loadTasks() {
     const taskLabel = document.createElement('label');
     li.className = 'listElement';
     taskLabel.textContent = task.text;
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+      if (checkIdExistence(task.id)) {
+        deleteTask(task.id);
+      }
+    });
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = task.isCompleted;
     checkbox.className = 'check-box';
-    checkbox.addEventListener('change', () =>
-      updateTaskStatus(task.id, checkbox.checked)
-    );
+    checkbox.addEventListener('change', () => {
+      if (checkIdExistence(task.id)) {
+        updateTaskStatus(task.id, checkbox.checked);
+      }
+    });
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => deleteTask(task.id));
+
 
     li.appendChild(deleteButton);
     li.appendChild(checkbox);
@@ -61,6 +68,16 @@ async function deleteTask(taskId) {
     },
   });
   loadTasks();
+}
+
+function checkIdExistence(ID) {
+  if (!ID || (typeof ID !== 'number' && typeof ID !== 'string')) {
+    console.error('Invalid or missing Task ID');
+    return false;
+  }
+  console.log('checked')
+  return true;
+
 }
 
 async function updateTaskStatus(taskId, isCompleted) {
